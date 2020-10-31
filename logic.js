@@ -2,6 +2,26 @@ let apd;
 let word;
 let stack;
 let currentState;
+// salve salve salve
+// salve salve salve
+// salve salve salve
+// salve salve salve
+// salve salve salve
+// salve salve salve
+// salve salve salve
+// salve salve salve
+// salve salve salve
+// salve salve salve
+
+// exit with ctrl + D
+
+// readline.emitKeypressEvents(process.stdin);
+// process.stdin.setRawMode(true);
+
+// process.stdin.on("keypress", (str, key) => {
+//   console.log(key);
+//   if (key && key.sequence === "\u0004") process.exit();
+// });
 
 const handleInput = (input) => {
   let letter = input;
@@ -9,22 +29,28 @@ const handleInput = (input) => {
 
 //Método para inserir os simbolos na pilha na ordem correta
 const inputStack = (input) => {
-  if(input.length>1){
-    for(let i = input.length - 1; i>=0; i--){
+  console.log(input);
+  if (input.length > 1) {
+    for (let i = input.length - 1; i >= 0; i--) {
       stack.push(input[i]);
     }
+  } else {
+    stack.push(input);
   }
-}
+};
 
 //Função que retorna o 'caminho' de um estado atual para um estado futuro através do valor da trnasição
-const handlePath = (input) =>{
-  for(let i = 0; i< apd.partialFunctions.length; i++){
-    if(apd.partialFunctions[i].currentState == currentState && apd.partialFunctions[i].entry == input ){      
-      inputStack(apd.partialFunctions[i].stackIn);   //Apenas teste do push
-      return apd.partialFunctions[i];
+const handlePath = (input) => {
+  for (const partialFunction of apd.partialFunctions) {
+    if (
+      partialFunction.currentState == currentState &&
+      partialFunction.entry == input
+    ) {
+      inputStack(partialFunction.stackIn); //Apenas teste do push
+      return partialFunction;
     }
   }
-}
+};
 
 // Função que executa toda a logica do APD
 const run = (apdInput, wordInput) => {
@@ -37,10 +63,8 @@ const run = (apdInput, wordInput) => {
     //handleInput(word[i]);
     handlePath(word[i]);
   }
-  
+
   console.log(stack);
-
-
 };
 
 module.exports = {
