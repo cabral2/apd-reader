@@ -9,7 +9,7 @@ const readFile = (path) => {
 const parsedFileData = readFile("./exemplo.json");
 const ap = parsedFileData.ap;
 
-const word = "0101";
+const word = "111000";
 
 const apd = {
   states: ap[0],
@@ -25,7 +25,7 @@ apd.partialFunctions = apd.partialFunctions.map((y) => {
     currentState: y[0],
     entry: y[1],
     stackOut: y[2],
-    destiny: y[3],
+    destinyState: y[3],
     stackIn: y[4],
   };
 });
