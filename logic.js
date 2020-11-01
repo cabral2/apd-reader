@@ -13,10 +13,6 @@ let currentState;
 //   if (key && key.sequence === "\u0004") process.exit();
 // });
 
-const handleInput = (input) => {
-  let letter = input;
-};
-
 //Método para remover os simbolos na pilha na ordem correta
 const popStack = (inout) => {
   if(inout !== '#')
@@ -32,11 +28,7 @@ const pushStack = (input) => {
   } else if(input !== '#'){
     stack.push(input);
   }
-  //console.log(`Estado: ${currentState}`);
-  //console.log(`Pilha:  ${stack}`);
 };
-
-
 
 //Função que retorna o 'caminho' de um estado atual para um estado futuro através do valor da transição
 const handlePath = (input) => {
@@ -61,15 +53,22 @@ const handlePath = (input) => {
 
 // Função que executa toda a logica do APD
 const run = (apdInput, wordInput) => {
+  let invalidWord = false;
   apd = apdInput;
   word = wordInput;
   stack = [];
   currentState = apd.initialState;
 
   for (let i = 0; i < word.length; i++) {
-    const transition = handlePath(word[i]);
-    
-    //console.log(transition ? true : false);
+    if(word[i] === '#'){
+      continue;
+    }
+    if(!apd.alphabet.includes(word[i])){
+      invalidWord = true;
+      break;
+    }
+    const transition = handlePath(word[i]);    
+
     if(!transition)
       break;
 
@@ -90,7 +89,7 @@ const run = (apdInput, wordInput) => {
     pushStack(transition.stackIn)
   }
 
-  if(stack[0] === undefined && apd.finalStates.includes(currentState)){
+  if(!invalidWord && stack[0] === undefined && apd.finalStates.includes(currentState)){
     console.log("Sim")
   }else{
     console.log("Não");
