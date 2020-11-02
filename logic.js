@@ -3,21 +3,10 @@ let word;
 let stack;
 let currentState;
 
-// exit with ctrl + D
-
-// readline.emitKeypressEvents(process.stdin);
-// process.stdin.setRawMode(true);
-
-// process.stdin.on("keypress", (str, key) => {
-//   console.log(key);
-//   if (key && key.sequence === "\u0004") process.exit();
-// });
-
 //Método para remover os simbolos na pilha na ordem correta
 const popStack = (inout) => {
-  if(inout !== '#')
-   stack.pop();
-}
+  if (inout !== "#") stack.pop();
+};
 
 //Método para inserir os simbolos na pilha na ordem correta
 const pushStack = (input) => {
@@ -25,7 +14,7 @@ const pushStack = (input) => {
     for (let i = input.length - 1; i >= 0; i--) {
       stack.push(input[i]);
     }
-  } else if(input !== '#'){
+  } else if (input !== "#") {
     stack.push(input);
   }
 };
@@ -33,18 +22,27 @@ const pushStack = (input) => {
 //Função que retorna o 'caminho' de um estado atual para um estado futuro através do valor da transição
 const handlePath = (input) => {
   for (const partialFunction of apd.partialFunctions) {
-    if(
+    if (
       partialFunction.currentState === currentState &&
-      partialFunction.entry === '#' &&
+      partialFunction.entry === "#" &&
       partialFunction.stackOut === stack[stack.length - 1]
-      ){        
-        return partialFunction;
+    ) {
+      return partialFunction;
     }
 
     if (
       partialFunction.currentState === currentState &&
       partialFunction.entry === input &&
-      (partialFunction.stackOut === '#' || partialFunction.stackOut === stack[stack.length - 1])
+      (partialFunction.stackOut === "#" ||
+        partialFunction.stackOut === stack[stack.length - 1])
+    ) {
+      return partialFunction;
+    }
+
+    if (
+      partialFunction.currentState === currentState &&
+      partialFunction.entry === "#" &&
+      partialFunction.stackOut === "#"
     ) {
       return partialFunction;
     }
@@ -60,41 +58,50 @@ const run = (apdInput, wordInput) => {
   currentState = apd.initialState;
 
   for (let i = 0; i < word.length; i++) {
-    if(word[i] === '#'){
+    if (word[i] === "#") {
       continue;
     }
-    if(!apd.alphabet.includes(word[i])){
+
+    if (!apd.alphabet.includes(word[i])) {
       invalidWord = true;
       break;
     }
-    const transition = handlePath(word[i]);    
+    const transition = handlePath(word[i]);
 
-    if(!transition)
+    if (!transition) {
+      invalidWord = true;
       break;
+    }
 
     popStack(transition.stackOut);
     pushStack(transition.stackIn);
     currentState = transition.destinyState;
-    if(transition.entry === '#'){
-      i=i-1;
+    if (transition.entry === "#") {
+      i = i - 1;
     }
   }
 
-  while(stack.length>0){
-    const transition = handlePath('#');
-    if(!transition)
+  while (stack.length > 0) {
+    const transition = handlePath("#");
+    if (!transition) {
+      invalidWord = true;
       break;
+    }
+
     currentState = transition.destinyState;
-    popStack(transition.stackOut)
-    pushStack(transition.stackIn)
+    popStack(transition.stackOut);
+    pushStack(transition.stackIn);
   }
 
-  if(!invalidWord && stack[0] === undefined && apd.finalStates.includes(currentState)){
-    console.log("Sim")
-  }else{
+  if (
+    !invalidWord &&
+    stack[0] === undefined &&
+    apd.finalStates.includes(currentState)
+  ) {
+    console.log("Sim");
+  } else {
     console.log("Não");
   }
-
 };
 
 module.exports = {
